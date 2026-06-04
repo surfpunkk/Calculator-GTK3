@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.30)
-project(calculator_project CXX)
+project(calculator_project C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -13,22 +13,14 @@ add_executable(Calculator
         calc_app.cpp
         event_handlers.cpp
         calculator_core.cpp
+        sources.c
 )
 target_sources(Calculator PRIVATE
         calc_app.h
         event_handlers.h
         calculator_core.h
 )
-file(COPY styles/styles.css
-          styles/dark_styles.css
-          styles/icon.png
-          DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
-target_include_directories(Calculator PRIVATE ${GTK3_INCLUDE_DIRS}
-        ${ICU_INCLUDE_DIRS})
-target_link_libraries(Calculator PRIVATE ${GTK3_LIBRARIES}
-        ${ICU_UC_STATIC}
-        ${ICU_DATA_STATIC})
-target_compile_options(Calculator PRIVATE ${GTK3_CFLAGS_OTHER}
-        ${ICU_CFLAGS_OTHER})
+target_include_directories(Calculator PRIVATE ${GTK3_INCLUDE_DIRS} ${ICU_INCLUDE_DIRS})
+target_link_libraries(Calculator PRIVATE ${GTK3_LIBRARIES} ${ICU_UC_STATIC} ${ICU_DATA_STATIC})
+target_compile_options(Calculator PRIVATE ${GTK3_CFLAGS_OTHER} ${ICU_CFLAGS_OTHER})
 target_compile_definitions(Calculator PRIVATE U_STATIC_IMPLEMENTATION)

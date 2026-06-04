@@ -17,12 +17,7 @@ void Calculator::load_css(const char* css_path) {
         g_object_unref(old_provider);
     }
     old_provider = provider;
-
-    GError *error = nullptr;
-    if (!gtk_css_provider_load_from_path(provider, css_path, &error)) {
-        g_printerr("Error loading CSS: %s\n", error->message);
-        g_error_free(error);
-    }
+    gtk_css_provider_load_from_resource(provider, css_path);
 
     gtk_style_context_add_provider_for_screen(
         screen,
@@ -38,7 +33,7 @@ void Calculator::setup_header_bar() {
     gtk_window_set_titlebar(GTK_WINDOW(window), header_bar);
 
     undo_button = gtk_button_new_with_label("↩");
-    g_signal_connect(undo_button, "clicked", G_CALLBACK(+[](GtkButton*, Calculator* self) {
+    g_signal_connect(undo_button, "clicked", G_CALLBACK(+[](GtkButton*, const Calculator* self) {
         self->undo_last_action();
     }), this);
     gtk_header_bar_pack_start(GTK_HEADER_BAR(header_bar), undo_button);
@@ -58,9 +53,9 @@ void Calculator::setup_header_bar() {
     gtk_header_bar_pack_end(GTK_HEADER_BAR(header_bar), theme_switch);
 }
 
-void Calculator::undo_last_action() {
+void Calculator::undo_last_action() const {
     if (!history_stack.empty()) {
-        std::string prev_expression = history_stack.top();
+        const std::string prev_expression = history_stack.top();
         history_stack.pop();
         gtk_entry_set_text(GTK_ENTRY(entry), prev_expression.c_str());
     }
@@ -117,9 +112,9 @@ void Calculator::toggle_theme() const {
     );
     g_object_unref(provider);
     if (dark_theme) {
-        load_css("../styles/dark_styles.css");
+        load_css("/org/calc/styles/dark_styles.css");
     } else {
-        load_css("../styles/styles.css");
+        load_css("/org/calc/styles/styles.css");
     }
     gtk_widget_queue_draw(window);
 }
@@ -131,7 +126,10 @@ void Calculator::setup_ui() {
     gtk_window_set_deletable(GTK_WINDOW(window), TRUE);
     gtk_window_set_decorated(GTK_WINDOW(window), TRUE);
     gtk_window_set_modal(GTK_WINDOW(window), FALSE);
-    gtk_window_set_icon_from_file(GTK_WINDOW(window), "../styles/icon.png", nullptr);
+    if (GdkPixbuf *pixbuf = gdk_pixbuf_new_from_resource("/org/calc/styles/icon.png", nullptr)) {
+        gtk_window_set_icon(GTK_WINDOW(window), pixbuf);
+        g_object_unref(pixbuf);
+    }
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), nullptr);
 
     setup_header_bar();

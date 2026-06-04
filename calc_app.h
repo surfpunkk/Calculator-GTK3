@@ -21,7 +21,7 @@ private:
 
     static void load_css(const char* css_path);
     void setup_header_bar();
-    void undo_last_action();
+    void undo_last_action() const;
     void show_history();
     static bool is_system_dark_theme();
     void toggle_theme() const;

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- this file for generating c-file which using for styles (sources.c) -->
+<gresources>
+    <gresource prefix="/org/calc">
+        <file>styles/styles.css</file>
+        <file>styles/dark_styles.css</file>
+        <file>styles/icon.png</file>
+    </gresource>
+</gresources>
