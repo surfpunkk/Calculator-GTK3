@@ -7,7 +7,7 @@
         history_stack.emplace(old_expression);
         if (result == "inf") result = "∞";
         if (result == "-inf") result = "-∞";
-        std::string history_item = old_expression + " = " + result;
+        const std::string history_item = old_expression + " = " + result;
         history.push_back(history_item);
         if (history.size() > 15) {
             history.erase(history.begin());
@@ -33,13 +33,13 @@
             cursor_pos = start_pos;
         }
         if (cursor_pos < 0 || cursor_pos > ustr.length()) cursor_pos = ustr.length();
-        icu::UnicodeString uinput = icu::UnicodeString::fromUTF8(input);
+        const icu::UnicodeString uinput = icu::UnicodeString::fromUTF8(input);
         ustr.insert(cursor_pos, uinput);
         std::string newExpression;
         ustr.toUTF8String(newExpression);
         expression = newExpression;
         gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
-        gint new_cursor_pos = cursor_pos + uinput.length();
+        const gint new_cursor_pos = cursor_pos + uinput.length();
         gtk_editable_set_position(GTK_EDITABLE(entry), new_cursor_pos);
     }
 
@@ -54,7 +54,7 @@
         const gchar *current_text = gtk_entry_get_text(GTK_ENTRY(entry));
         std::string old_expression;
         if (expression.find(' ') != std::string::npos) {
-            for (char c : expression) {
+            for (const char c : expression) {
                 if (c != ' ') {
                     old_expression += c;
                 }
@@ -110,7 +110,7 @@
             ustr.toUTF8String(newExpression);
             expression = newExpression;
             gtk_entry_set_text(GTK_ENTRY(entry), expression.c_str());
-            gint new_cursor_pos = cursor_pos > 0 ? cursor_pos - 1 : -1;
+            const gint new_cursor_pos = cursor_pos > 0 ? cursor_pos - 1 : -1;
             gtk_editable_set_position(GTK_EDITABLE(entry), new_cursor_pos);
         }
         result_shown = false;
@@ -161,7 +161,7 @@
 
     void EventHandlers::handle_input(GtkWidget *entry, const char *input) {
 
-        EventHandlers::update_expression(GTK_ENTRY(entry));
+        update_expression(GTK_ENTRY(entry));
 
         if (g_strcmp0(input, "C") == 0) {
             handle_clear(GTK_ENTRY(entry));

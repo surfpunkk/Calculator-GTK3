@@ -230,7 +230,6 @@ gboolean Calculator::on_key_press(GtkWidget *widget, const GdkEventKey *event) {
             gtk_editable_delete_selection(GTK_EDITABLE(widget));
         }
         EventHandlers::handle_input(widget, key);
-        gtk_editable_set_position(GTK_EDITABLE(widget), -1);
         return TRUE;
     }
     return FALSE;
